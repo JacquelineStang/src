@@ -39,6 +39,27 @@ export default function SmartBusHome() {
         <h2>Mobilidade Inteligente</h2>
       </div>
 
+      <p
+        style={{
+          color: "white",
+          fontWeight: "bold",
+          textAlign: "center",
+          marginBottom: "5px"
+        }}
+      >
+        Bem-vinda Jacqueline
+      </p>
+
+      <p
+        style={{
+          color: "#FFCC00",
+          textAlign: "center",
+          marginBottom: "20px"
+        }}
+      >
+        Sistema de Mobilidade Inteligente de Curitiba
+      </p>
+
       <button
         style={estiloBotao}
         onClick={() => navigate("/linhas")}

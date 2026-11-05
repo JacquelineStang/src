@@ -38,17 +38,6 @@ export default function SmartBusFavoritos() {
         🚌 505 Boqueirão
       </div>
 
-      <div
-        style={{
-          backgroundColor: "#1C6688",
-          padding: "10px",
-          marginBottom: "10px",
-          borderRadius: "5px"
-        }}
-      >
-        🚌 666 Interbairros
-      </div>
-
       <button
         onClick={() => navigate("/home")}
         style={{
@@ -58,8 +47,7 @@ export default function SmartBusFavoritos() {
           backgroundColor: "#FFCC00",
           border: "none",
           borderRadius: "5px",
-          fontWeight: "bold",
-          cursor: "pointer"
+          fontWeight: "bold"
         }}
       >
         VOLTAR
