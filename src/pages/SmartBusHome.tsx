@@ -97,6 +97,20 @@ export default function SmartBusHome() {
 
       <button
         style={estiloBotao}
+        onClick={() => navigate("/monitoramento")}
+      >
+        ⏱️ MONITORAMENTO
+      </button>
+
+      <button
+        style={estiloBotao}
+        onClick={() => navigate("/sobre")}
+      >
+        ℹ️ SOBRE
+      </button>
+
+      <button
+        style={estiloBotao}
         onClick={() => navigate("/")}
       >
         🚪 SAIR

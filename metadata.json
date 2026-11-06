@@ -1,0 +1,8 @@
+{
+  "name": "SmartBus Curitiba",
+  "description": "Sistema de mobilidade inteligente e transporte público de Curitiba com rotas, mapas, ocorrências e assistência social.",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ],
+  "permissions": []
+}
