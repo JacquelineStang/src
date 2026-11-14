@@ -1,0 +1,6 @@
+{
+  "name": "SmartBus — Mobilidade Inteligente",
+  "description": "Plataforma integrada de mobilidade urbana para consulta de linhas de ônibus em tempo real, mapa interativo da frota, favoritos, registro de ocorrências e programas de assistência social.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
