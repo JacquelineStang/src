@@ -1,18 +1,20 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
- 
+
 interface RegistroOcorrencia {
   id: number;
+  protocolo?: string;
   tipo: string;
   local: string;
   descricao: string;
   horario: string;
   status: string;
 }
- 
+
 const ALERTAS_INICIAIS: RegistroOcorrencia[] = [
   {
     id: 1,
+    protocolo: "OCO-2026-001",
     tipo: "🚦 Trânsito / Atraso",
     local: "Terminal Capão da Imbuia — Linha 023 Inter 2",
     descricao: "Fluxo intenso na Av. Presidente Affonso Camargo; intervalo +4 min.",
@@ -21,6 +23,7 @@ const ALERTAS_INICIAIS: RegistroOcorrencia[] = [
   },
   {
     id: 2,
+    protocolo: "OCO-2026-002",
     tipo: "🚧 Alteração de Via",
     local: "Corredor Centenário / Campo Comprido — Linha 303",
     descricao: "Obras de manutenção próximas à Estação Tubo Cristo Rei.",
@@ -29,6 +32,7 @@ const ALERTAS_INICIAIS: RegistroOcorrencia[] = [
   },
   {
     id: 3,
+    protocolo: "OCO-2026-003",
     tipo: "🛡️ Segurança",
     local: "Terminal Boqueirão",
     descricao: "Ronda preventiva da Guarda Municipal reforçada na plataforma central.",
@@ -37,6 +41,7 @@ const ALERTAS_INICIAIS: RegistroOcorrencia[] = [
   },
   {
     id: 4,
+    protocolo: "OCO-2026-004",
     tipo: "🚌 Operação Normal",
     local: "Linhas 020 e 021 — Interbairros II",
     descricao: "Circulação regular nos sentidos Horário e Anti-Horário.",
@@ -44,48 +49,55 @@ const ALERTAS_INICIAIS: RegistroOcorrencia[] = [
     status: "Normal",
   },
 ];
- 
+
 export default function SmartBusOcorrencias() {
   const navigate = useNavigate();
- 
+
   const [tipo, setTipo] = useState("🛡️ Segurança");
   const [local, setLocal] = useState("Terminal Capão da Imbuia");
   const [descricao, setDescricao] = useState("");
   const [mensagem, setMensagem] = useState("");
- 
+  const [enviadoComSucesso, setEnviadoComSucesso] = useState(false);
+
   const [ocorrencias, setOcorrencias] = useState<RegistroOcorrencia[]>(() => {
     const salvas = localStorage.getItem("smartbus_ocorrencias");
     return salvas ? JSON.parse(salvas) : ALERTAS_INICIAIS;
   });
- 
+
   function registrarOcorrencia(e: React.FormEvent) {
     e.preventDefault();
+    setEnviadoComSucesso(false);
+
     if (!descricao.trim()) {
-      setMensagem("Descreva brevemente a ocorrência antes de enviar.");
+      setMensagem("⚠️ Descreva brevemente a ocorrência antes de enviar.");
       return;
     }
- 
+
     const agora = new Date().toLocaleTimeString("pt-BR", {
       hour: "2-digit",
       minute: "2-digit",
     });
- 
+
+    const numeroProtocolo = `OCO-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+
     const nova: RegistroOcorrencia = {
       id: Date.now(),
+      protocolo: numeroProtocolo,
       tipo,
       local,
       descricao: descricao.trim(),
       horario: `Registrado às ${agora}`,
       status: "Encaminhado à Gestão",
     };
- 
+
     const atualizadas = [nova, ...ocorrencias];
     setOcorrencias(atualizadas);
     localStorage.setItem("smartbus_ocorrencias", JSON.stringify(atualizadas));
     setDescricao("");
-    setMensagem("✅ Ocorrência registrada e encaminhada com sucesso!");
+    setEnviadoComSucesso(true);
+    setMensagem(`✅ Protocolo ${numeroProtocolo} encaminhado ao Painel Central!`);
   }
- 
+
   return (
     <div
       style={{
@@ -121,8 +133,7 @@ export default function SmartBusOcorrencias() {
         >
           <h1 style={{ margin: 0, fontSize: "1.4rem" }}>⚠️ Segurança e Ocorrências</h1>
         </div>
- 
-        {/* Formulário de Registro de Ocorrência */}
+
         <form
           onSubmit={registrarOcorrencia}
           style={{
@@ -136,7 +147,7 @@ export default function SmartBusOcorrencias() {
           <h2 style={{ fontSize: "0.95rem", color: "#FFCC00", margin: "0 0 10px 0" }}>
             📝 Registrar Nova Ocorrência
           </h2>
- 
+
           <label style={{ display: "block", fontSize: "0.8rem", marginBottom: "4px" }}>
             Categoria:
           </label>
@@ -156,7 +167,7 @@ export default function SmartBusOcorrencias() {
             <option value="🚦 Atraso / Superlotação">🚦 Atraso ou Superlotação</option>
             <option value="🚧 Problema na Via / Ponto">🚧 Problema na Via ou Estação-Tubo</option>
           </select>
- 
+
           <label style={{ display: "block", fontSize: "0.8rem", marginBottom: "4px" }}>
             Localização / Linha:
           </label>
@@ -185,7 +196,7 @@ export default function SmartBusOcorrencias() {
               Linha 020 / 021 — Interbairros II
             </option>
           </select>
- 
+
           <label style={{ display: "block", fontSize: "0.8rem", marginBottom: "4px" }}>
             Relato da situação:
           </label>
@@ -204,12 +215,12 @@ export default function SmartBusOcorrencias() {
               boxSizing: "border-box",
             }}
           />
- 
+
           {mensagem && (
             <div
               style={{
-                fontSize: "0.8rem",
-                color: "#4ADE80",
+                fontSize: "0.82rem",
+                color: enviadoComSucesso ? "#4ADE80" : "#F87171",
                 marginBottom: "8px",
                 fontWeight: "bold",
               }}
@@ -217,7 +228,7 @@ export default function SmartBusOcorrencias() {
               {mensagem}
             </div>
           )}
- 
+
           <button
             type="submit"
             style={{
@@ -233,13 +244,32 @@ export default function SmartBusOcorrencias() {
           >
             ENVIAR OCORRÊNCIA
           </button>
+
+          {enviadoComSucesso && (
+            <button
+              type="button"
+              onClick={() => navigate("/painel")}
+              style={{
+                marginTop: "8px",
+                width: "100%",
+                padding: "9px",
+                backgroundColor: "#16A34A",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+                fontWeight: "bold",
+                cursor: "pointer",
+              }}
+            >
+              📊 ACOMPANHAR NO PAINEL CENTRAL
+            </button>
+          )}
         </form>
- 
-        {/* Histórico e Alertas Inteligentes */}
+
         <h2 style={{ fontSize: "0.95rem", color: "#FFCC00", margin: "0 0 10px 0" }}>
           📋 Alertas Ativos e Histórico de Registros
         </h2>
- 
+
         {ocorrencias.map((item) => (
           <div
             key={item.id}
@@ -248,7 +278,9 @@ export default function SmartBusOcorrencias() {
               padding: "11px",
               marginBottom: "10px",
               borderRadius: "6px",
-              borderLeft: "4px solid #FFCC00",
+              borderLeft: item.status.includes("Resolvido")
+                ? "4px solid #4ADE80"
+                : "4px solid #FFCC00",
             }}
           >
             <div
@@ -262,7 +294,9 @@ export default function SmartBusOcorrencias() {
               }}
             >
               <span>{item.tipo}</span>
-              <span>{item.status}</span>
+              <span style={{ color: item.status.includes("Resolvido") ? "#4ADE80" : "#FFCC00" }}>
+                {item.status}
+              </span>
             </div>
             <div style={{ fontWeight: "bold", fontSize: "0.9rem", marginBottom: "3px" }}>
               📍 {item.local}
@@ -270,10 +304,13 @@ export default function SmartBusOcorrencias() {
             <div style={{ fontSize: "0.82rem", color: "#e2e8f0", marginBottom: "4px" }}>
               {item.descricao}
             </div>
-            <div style={{ fontSize: "0.72rem", color: "#cbd5e1" }}>{item.horario}</div>
+            <div style={{ fontSize: "0.72rem", color: "#cbd5e1" }}>
+              {item.protocolo ? `${item.protocolo} • ` : ""}
+              {item.horario}
+            </div>
           </div>
         ))}
- 
+
         <button
           onClick={() => navigate("/home")}
           style={{

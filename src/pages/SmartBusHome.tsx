@@ -1,26 +1,27 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
  
 export default function SmartBusHome() {
   const navigate = useNavigate();
+  const [nomeUsuario, setNomeUsuario] = useState("Passageiro");
  
-  const dadosLogado = localStorage.getItem("smartbus_usuario_logado");
-  const usuarioLogado = dadosLogado ? JSON.parse(dadosLogado) : null;
- 
-  const estiloBotao = {
-    width: "100%",
-    padding: "15px",
-    marginBottom: "10px",
-    backgroundColor: "#1C6688",
-    color: "white",
-    border: "none",
-    fontSize: "18px",
-    borderRadius: "5px",
-    cursor: "pointer",
-  };
+  useEffect(() => {
+    const dadosLogado = localStorage.getItem("smartbus_usuario_logado");
+    if (dadosLogado) {
+      try {
+        const usuario = JSON.parse(dadosLogado);
+        if (usuario.nome) {
+          setNomeUsuario(usuario.nome.split(" ")[0]);
+        }
+      } catch {
+        setNomeUsuario("Passageiro");
+      }
+    }
+  }, []);
  
   function handleSair() {
     localStorage.removeItem("smartbus_usuario_logado");
-    navigate("/");
+    navigate("/login");
   }
  
   return (
@@ -38,11 +39,12 @@ export default function SmartBusHome() {
       <div
         style={{
           width: "100%",
-          maxWidth: "400px",
+          maxWidth: "420px",
           padding: "20px",
           backgroundColor: "#0D3B4C",
           border: "4px solid #114d66",
           borderRadius: "10px",
+          color: "white",
           boxSizing: "border-box",
         }}
       >
@@ -51,72 +53,146 @@ export default function SmartBusHome() {
             backgroundColor: "#FFCC00",
             color: "black",
             textAlign: "center",
-            padding: "15px",
-            borderRadius: "5px",
-            marginBottom: "20px",
+            padding: "14px",
+            borderRadius: "6px",
+            marginBottom: "18px",
           }}
         >
-          <h1 style={{ margin: "0 0 6px 0", fontSize: "1.6rem" }}>🚌 SmartBus</h1>
-          <h2 style={{ margin: 0, fontSize: "1.1rem", fontWeight: "normal" }}>
-            Mobilidade Inteligente
-          </h2>
+          <h1 style={{ margin: "0 0 4px 0", fontSize: "1.5rem" }}>🚌 SmartBus Curitiba</h1>
+          <div style={{ fontSize: "0.85rem", fontWeight: "bold" }}>
+            Olá, {nomeUsuario}! Escolha um módulo:
+          </div>
         </div>
  
-        <p
+        <button
+          onClick={() => navigate("/mapa")}
           style={{
+            width: "100%",
+            padding: "13px",
+            backgroundColor: "#144E68",
             color: "white",
+            border: "1px solid #1C6688",
+            borderRadius: "6px",
             fontWeight: "bold",
-            textAlign: "center",
-            marginBottom: "5px",
-            fontSize: "1.1rem",
+            fontSize: "0.95rem",
+            cursor: "pointer",
+            marginBottom: "10px",
+            textAlign: "left",
           }}
         >
-          {usuarioLogado?.nome ? `Bem-vindos, ${usuarioLogado.nome}` : "Bem-vindos"}
-        </p>
+          🗺️ Mapa em Tempo Real (GPS)
+        </button>
  
-        <p
+        <button
+          onClick={() => navigate("/linhas")}
           style={{
-            color: "#FFCC00",
-            textAlign: "center",
-            marginBottom: "20px",
-          }}
-        >
-          Sistema de Mobilidade Inteligente de Curitiba
-        </p>
- 
-        <button style={estiloBotao} onClick={() => navigate("/linhas")}>
-          🚌 LINHAS
-        </button>
- 
-        <button style={estiloBotao} onClick={() => navigate("/mapa")}>
-          📍 MAPA
-        </button>
- 
-        <button style={estiloBotao} onClick={() => navigate("/favoritos")}>
-          ⭐ FAVORITOS
-        </button>
- 
-        <button style={estiloBotao} onClick={() => navigate("/ocorrencias")}>
-          ⚠️ OCORRÊNCIAS
-        </button>
- 
-        <button style={estiloBotao} onClick={() => navigate("/assistencia")}>
-          🤝 ASSISTÊNCIA SOCIAL
-        </button>
- 
-        <button style={estiloBotao} onClick={handleSair}>
-          🚪 SAIR
-        </button>
- 
-        <div
-          style={{
-            textAlign: "right",
+            width: "100%",
+            padding: "13px",
+            backgroundColor: "#144E68",
             color: "white",
-            marginTop: "10px",
+            border: "1px solid #1C6688",
+            borderRadius: "6px",
+            fontWeight: "bold",
+            fontSize: "0.95rem",
+            cursor: "pointer",
+            marginBottom: "10px",
+            textAlign: "left",
           }}
         >
-          Versão 1.0
-        </div>
+          🚏 Linhas e Horários de Curitiba
+        </button>
+ 
+        <button
+          onClick={() => navigate("/favoritos")}
+          style={{
+            width: "100%",
+            padding: "13px",
+            backgroundColor: "#144E68",
+            color: "white",
+            border: "1px solid #1C6688",
+            borderRadius: "6px",
+            fontWeight: "bold",
+            fontSize: "0.95rem",
+            cursor: "pointer",
+            marginBottom: "10px",
+            textAlign: "left",
+          }}
+        >
+          ⭐ Minhas Linhas Favoritas
+        </button>
+ 
+        <button
+          onClick={() => navigate("/ocorrencias")}
+          style={{
+            width: "100%",
+            padding: "13px",
+            backgroundColor: "#144E68",
+            color: "white",
+            border: "1px solid #1C6688",
+            borderRadius: "6px",
+            fontWeight: "bold",
+            fontSize: "0.95rem",
+            cursor: "pointer",
+            marginBottom: "10px",
+            textAlign: "left",
+          }}
+        >
+          🚨 Segurança e Ocorrências
+        </button>
+ 
+        <button
+          onClick={() => navigate("/assistencia")}
+          style={{
+            width: "100%",
+            padding: "13px",
+            backgroundColor: "#144E68",
+            color: "white",
+            border: "1px solid #1C6688",
+            borderRadius: "6px",
+            fontWeight: "bold",
+            fontSize: "0.95rem",
+            cursor: "pointer",
+            marginBottom: "10px",
+            textAlign: "left",
+          }}
+        >
+          🤝 Assistência Social (FAS / 156)
+        </button>
+ 
+        <button
+          onClick={() => navigate("/painel")}
+          style={{
+            width: "100%",
+            padding: "13px",
+            backgroundColor: "#082C39",
+            color: "#FFCC00",
+            border: "2px solid #FFCC00",
+            borderRadius: "6px",
+            fontWeight: "bold",
+            fontSize: "0.95rem",
+            cursor: "pointer",
+            marginBottom: "16px",
+            textAlign: "left",
+          }}
+        >
+          📊 Painel Central / Relatórios
+        </button>
+ 
+        <button
+          onClick={handleSair}
+          style={{
+            width: "100%",
+            padding: "12px",
+            backgroundColor: "#FFCC00",
+            color: "black",
+            border: "none",
+            borderRadius: "6px",
+            fontWeight: "bold",
+            cursor: "pointer",
+          }}
+        >
+          SAIR DA CONTA
+        </button>
       </div>
     </div>
   );
